@@ -39,18 +39,18 @@
         </dependency>
 
         <!-- spark如果想整合Hive，必须加入hive的支持 -->
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-hive_2.11</artifactId>
-            <version>2.3.2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.spark</groupId>-->
+            <!--<artifactId>spark-hive_2.11</artifactId>-->
+            <!--<version>2.3.2</version>-->
+        <!--</dependency>-->
 
         <!-- 指定hadoop-client API的版本 -->
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.hadoop</groupId>-->
+            <!--<artifactId>hadoop-client</artifactId>-->
+            <!--<version>${hadoop.version}</version>-->
+        <!--</dependency>-->
         <!-- mysql的连接驱动依赖 -->
         <dependency>
             <groupId>mysql</groupId>
@@ -63,16 +63,7 @@
         <!--<artifactId>kafka_2.11</artifactId>-->
         <!--<version>0.10.2.2</version>-->
         <!--</dependency>-->
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.11</artifactId>
-            <version>0.8.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-            <version>0.8.2.2</version>
-        </dependency>
+
         <!-- spark steaming的依赖 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -90,8 +81,9 @@
             <!--<artifactId>spark-streaming-kafka-0-8_2.11</artifactId>-->
             <!--<version>2.3.2</version>-->
         <!--</dependency>-->
+
+        <!--redis客户端-->
         <dependency>
-            <!--redis客户端-->
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>2.9.0</version>
