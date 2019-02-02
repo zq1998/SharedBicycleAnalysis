@@ -1,22 +1,23 @@
-package offline.pretreatment.dispose
+package pretreatment.dispose
+
 import com.alibaba.fastjson.{JSON, JSONObject}
-import offline.pretreatment.SchemaUtils.{LockSchema, RechargeSchema}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{Row, SparkSession}
+import pretreatment.SchemaUtils.OrderSchema
 
 /**
-  * 对充值日志进行预处理并清洗
+  * 对订单日志进行预处理并清洗
   * 转换为parquet文件格式，采用snappy压缩格式
   */
-object Recharge {
+object Order {
   def main(args: Array[String]): Unit = {
     if(args.length != 3){
       println(
         """
           |参数：
-          | logInputPath | hdfs://hadoop1:9000/bike/unwashed/Recharge
-          | compressionCode <snappy, gzip, lzo>  | snappy
-          | resultOutputPath | hdfs://hadoop1:9000/bike/washed/Recharge
+          | logInputPath | hdfs://hadoop1:9000/bike/unwashed/Order
+          | compressionCode <snappy, gzip, lzo> | snappy
+          | resultOutputPath | hdfs://hadoop1:9000/bike/washed/Order
         """.stripMargin
       )
       sys.exit()
@@ -62,11 +63,10 @@ object Recharge {
           value.getInteger("networkingmannerid"),
           value.getString("version"),
           value.getInteger("rechargetype"),
-          value.getDouble("amount"),
-          value.getInteger("rechargesource")
+          value.getDouble("amount")
         )
       })
-    val dataFrame=session.createDataFrame(disposedData,RechargeSchema.logStructType)
+    val dataFrame=session.createDataFrame(disposedData,OrderSchema.logStructType)
 
     //输出数据
     dataFrame.write.parquet(resultOutputPath)

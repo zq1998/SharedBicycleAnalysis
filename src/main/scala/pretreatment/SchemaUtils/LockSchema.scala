@@ -1,16 +1,16 @@
-package offline.pretreatment.SchemaUtils
+package pretreatment.SchemaUtils
 
 import org.apache.spark.sql.types._
 
 /**
   * parquet文件的schema信息
   */
-object RepairSchema {
+object LockSchema {
   val logStructType=StructType(Seq(
     StructField("sessionid", StringType),
     StructField("userid", StringType),
     StructField("bikeid", StringType),
-    StructField("timestamp", LongType),
+    StructField("timestamp", TimestampType),
     StructField("date", StringType),
     StructField("province", StringType),
     StructField("city", StringType),
@@ -21,8 +21,8 @@ object RepairSchema {
     StructField("client",IntegerType),
     StructField("mac", StringType),
     StructField("deviceType", IntegerType),
+    StructField("unlock", IntegerType),
     StructField("networkingmannerid", IntegerType),
-    StructField("version", StringType),
-    StructField("repairtype", IntegerType)
+    StructField("version", StringType)
   ))
 }

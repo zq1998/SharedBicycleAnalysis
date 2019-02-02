@@ -1,7 +1,7 @@
 package offline.analyse.tags
 
 import com.typesafe.config.ConfigFactory
-import offline.utils.JedisUtils
+import live.utils.JedisUtils
 import org.apache.hadoop.hbase.{HColumnDescriptor, HTableDescriptor, TableName}
 import org.apache.hadoop.hbase.client.{ConnectionFactory, Put}
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -12,9 +12,11 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 
 /**
-  * 生成标签存入hbase
+  * 根据日志信息生成标签
+  * 将标签明细数据存入hbase
+  * 以日期为列名存储数据
   */
-object TagsCtx {
+object TagsCtx2HBase {
   def main(args: Array[String]): Unit = {
     if(args.length!=2){
       println(
@@ -69,7 +71,7 @@ object TagsCtx {
 
 //    生成标签
     import spark.implicits._
-    val value = spark.read.parquet(logInputPath).where(
+    val result = spark.read.parquet(logInputPath).where(
       """
           userid !=""
       """.stripMargin
@@ -90,15 +92,18 @@ object TagsCtx {
       //        case (k,sameTags) =>(k,sameTags.map(_._2).sum)
       //      }.toList
       (a ++ b).groupBy(_._1).mapValues(_.foldLeft(0)(_ + _._2)).toList
-    }).map{
-      case (userid,userTags) =>{
-        val put=new Put(Bytes.toBytes(userid))
-        val tags=userTags.map(t=> t._1 + ":" + t._2).mkString(",")
-        put.addColumn(Bytes.toBytes("cf"),Bytes.toBytes(s"day $day"),Bytes.toBytes(tags))
+    }).map {
+      case (userid, userTags) => {
+        val put = new Put(Bytes.toBytes(userid))
+        val tags = userTags.map(t => t._1 + ":" + t._2).mkString(",")
+        put.addColumn(Bytes.toBytes("cf"), Bytes.toBytes(s"day $day"), Bytes.toBytes(tags))
         //row key对象
-        (new ImmutableBytesWritable(),put)
+        (new ImmutableBytesWritable(), put)
       }
-    }.saveAsHadoopDataset(jobConf)
+    }
+
+    //将标签信息存入hbase中
+    result.saveAsHadoopDataset(jobConf)
 
 
     spark.close()

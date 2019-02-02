@@ -1,7 +1,8 @@
 package offline.analyse.tags
 
 import ch.hsr.geohash.GeoHash
-import offline.utils.{BaiduGeoApi, JedisUtils}
+import live.utils.JedisUtils
+import offline.utils.BaiduGeoApi
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import redis.clients.jedis.JedisPool

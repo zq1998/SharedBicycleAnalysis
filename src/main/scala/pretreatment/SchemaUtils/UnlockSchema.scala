@@ -1,16 +1,17 @@
-package offline.pretreatment.SchemaUtils
+package pretreatment.SchemaUtils
 
-import org.apache.spark.sql.types._
+import org.apache.spark.sql.types.{StructField, _}
 
 /**
   * parquet文件的schema信息
   */
-object OrderSchema {
+object UnlockSchema {
   val logStructType=StructType(Seq(
     StructField("sessionid", StringType),
-    StructField("orderid", StringType),
     StructField("userid", StringType),
-    StructField("timestamp", LongType),
+    StructField("bikeid", StringType),
+    StructField("btimestamp",LongType ),
+    StructField("etimestamp", LongType),
     StructField("date", StringType),
     StructField("province", StringType),
     StructField("city", StringType),
@@ -21,9 +22,9 @@ object OrderSchema {
     StructField("client",IntegerType),
     StructField("mac", StringType),
     StructField("deviceType", IntegerType),
+    StructField("unlock", IntegerType),
     StructField("networkingmannerid", IntegerType),
     StructField("version", StringType),
-    StructField("rechargetype", IntegerType),
-    StructField("amount", DoubleType)
+    StructField("distance", DoubleType)
   ))
 }

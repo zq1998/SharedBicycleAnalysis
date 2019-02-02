@@ -1,4 +1,4 @@
-package offline.pretreatment.SchemaUtils
+package pretreatment.SchemaUtils
 
 import org.apache.spark.sql.types._
 

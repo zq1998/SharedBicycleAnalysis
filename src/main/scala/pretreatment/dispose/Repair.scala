@@ -1,23 +1,23 @@
-package offline.pretreatment.dispose
+package pretreatment.dispose
 
 import com.alibaba.fastjson.{JSON, JSONObject}
-import offline.pretreatment.SchemaUtils.{LockSchema, OrderSchema}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{Row, SparkSession}
+import pretreatment.SchemaUtils.RepairSchema
 
 /**
-  * 对订单日志进行预处理并清洗
+  * 对报修日志进行预处理并清洗
   * 转换为parquet文件格式，采用snappy压缩格式
   */
-object Order {
+object Repair {
   def main(args: Array[String]): Unit = {
     if(args.length != 3){
       println(
         """
           |参数：
-          | logInputPath | hdfs://hadoop1:9000/bike/unwashed/Order
-          | compressionCode <snappy, gzip, lzo> | snappy
-          | resultOutputPath | hdfs://hadoop1:9000/bike/washed/Order
+          | logInputPath |  hdfs://hadoop1:9000/bike/unwashed/Repair
+          | compressionCode <snappy, gzip, lzo>  | snappy
+          | resultOutputPath |  hdfs://hadoop1:9000/bike/washed/Repair
         """.stripMargin
       )
       sys.exit()
@@ -30,7 +30,7 @@ object Order {
     sparkConf.setAppName(s"${this.getClass.getSimpleName}")
       .setMaster("local[*]")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    //              .set("spark.sql.parquet.compression.codec", compressionCode)
+      .set("spark.sql.parquet.compression.codec", compressionCode)
 
     //    创建spark上下文
     val session = SparkSession.builder()
@@ -47,8 +47,8 @@ object Order {
         val locationObj = value.get("location").asInstanceOf[JSONObject]
         Row(
           value.getString("sessionid"),
-          value.getString("orderid"),
           value.getString("userid"),
+          value.getString("bikeid"),
           value.getLong("timestamp"),
           value.getString("date"),
           value.getString("province"),
@@ -62,11 +62,10 @@ object Order {
           value.getInteger("deviceType"),
           value.getInteger("networkingmannerid"),
           value.getString("version"),
-          value.getInteger("rechargetype"),
-          value.getDouble("amount")
+          value.getInteger("repairtype")
         )
       })
-    val dataFrame=session.createDataFrame(disposedData,OrderSchema.logStructType)
+    val dataFrame=session.createDataFrame(disposedData,RepairSchema.logStructType)
 
     //输出数据
     dataFrame.write.parquet(resultOutputPath)

@@ -169,6 +169,12 @@
             <artifactId>hbase-server</artifactId>
             <version>1.4.9</version>
         </dependency>
+        <!--spark 写入 elasticsearch-->
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch-hadoop</artifactId>
+            <version>6.5.4</version>
+        </dependency>
     </dependencies>
 
 
